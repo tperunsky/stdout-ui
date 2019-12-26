@@ -83,7 +83,6 @@ $wsUrl = $host . ':' . $port;
                 << stdout.online
                 <span class="badge badge-success hide connectionSuccess">Connected</span>
                 <span class="badge badge-warning connectionPending">Connecting...</span>
-                <span class="badge badge-danger hide connectionFailure">Disconnected</span>
             </h3>
         </div>
     </div>
@@ -105,53 +104,61 @@ $wsUrl = $host . ':' . $port;
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
 
-         var conn = new WebSocket('wss://<?php echo $wsUrl ?>');
+
          var itemCounter = 0;
          var maxLogItems = 500;
 
-         conn.onopen = function (e) {
-             console.log("Connection established! Registering session <?php echo $sessionId ?>");
-             conn.send('StdoutOnline-Register-Session <?php echo $sessionId ?>');
-             $('.connectionSuccess').removeClass('hide');
-             $('.connectionFailure, .connectionPending').addClass('hide');
-         };
 
-         conn.onerror = function (e) {
-             $('.connectionSuccess, .connectionPending').addClass('hide');
-             $('.connectionFailure').removeClass('hide');
-             console.log(e);
-         };
+         function connect() {
+             var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
+             wss.onopen = function () {
+                 console.log("Connection established! Registering session <?php echo $sessionId ?>");
+                 wss.send('StdoutOnline-Register-Session <?php echo $sessionId ?>');
+                 $('.connectionSuccess').removeClass('hide');
+                 $('.connectionPending').addClass('hide');
+             };
 
-         conn.onclose = function (e) {
-             $('.connectionSuccess, .connectionPending').addClass('hide');
-             $('.connectionFailure').removeClass('hide');
-         };
+             wss.onmessage = function (e) {
+                 itemCounter++;
+                 var $logItemToClone = $('div.logItemContainer.toClone');
+                 $logItemToClone
+                     .clone()
+                        .removeClass('toClone hide')
+                        .addClass('countableItem')
+                        .insertAfter($logItemToClone)
+                        .find('.logItem')
+                            .text(JSON.parse(e.data))
+                        .end()
+                        .find('.timestamp')
+                            .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                            .find('.logItemCounter')
+                                .text(itemCounter)
+                        .end()
+                        .find('.logItemCardHeader, .logItemCardBody')
+                            .addClass('highlightBg')
+                 ;
 
-         conn.onmessage = function (e) {
-             itemCounter++;
-             var $logItemToClone = $('div.logItemContainer.toClone');
-             $logItemToClone
-                 .clone()
-                 .removeClass('toClone hide')
-                 .addClass('countableItem')
-                 .insertAfter($logItemToClone)
-                 .find('.logItem')
-                    .text(JSON.parse(e.data))
-                 .end()
-                 .find('.timestamp')
-                    .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
-                 .find('.logItemCounter')
-                    .text(itemCounter)
-                 .end()
-                 .find('.logItemCardHeader, .logItemCardBody')
-                    .addClass('highlightBg')
-             ;
+                 var $logItems = $('div.logItemContainer.countableItem');
+                 if ($logItems.length > maxLogItems) {
+                     $logItems.last().remove();
+                 }
+             };
 
-             var $logItems = $('div.logItemContainer.countableItem');
-             if ($logItems.length > maxLogItems) {
-                 $logItems.last().remove();
-             }
-         };
+             wss.onclose = function (e) {
+                 $('.connectionSuccess').addClass('hide');
+                 $('.connectionPending').removeClass('hide');
+                 console.log('Socket is closed. Retrying connection...', e.reason);
+                 connect();
+             };
+
+             wss.onerror = function (e) {
+                 $('.connectionSuccess').addClass('hide');
+                 $('.connectionPending').removeClass('hide');
+                 wss.close();
+             };
+         }
+
+         connect();
 
          function getDateTimeStr() {
              var now = new Date();
