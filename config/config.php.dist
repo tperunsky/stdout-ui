@@ -1,0 +1,12 @@
+<?php
+return [
+    'websocketServer' => [
+        'host' => 'localhost',
+        'port' => 18080,
+        'timeout' => 30
+    ],
+    'tcpServer' => [
+        'port' => 18081,
+        'timeout' => 30
+    ]
+];
