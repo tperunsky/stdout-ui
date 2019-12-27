@@ -45,29 +45,72 @@ $wsUrl = $host . ':' . $port;
             display: none !important;
         }
 
-        .logItemHeader {
-            cursor: pointer;
+        .logItemLinks {
+            padding-right: 10px;
+        }
+
+        .logItemLinks > * {
+            padding-right: 15px;
+            outline : none;
+        }
+
+        .logItemLinks a.logItemPinLink {
+            color:
         }
 
         .card-header.logItemCardHeader {
             border-bottom: 1px solid rgb(52, 52, 52)
         }
 
-        @-webkit-keyframes highlight {
+        .logItemContainer.originalItem.highlightItem {
+            background-color: #FF9090;
+        }
+
+        .logItemContainer.originalItem .card .logItemCardHeader.highlightItem {
+            background-color: #FF9090;
+        }
+
+        .logItemCardHeader.card-header {
+            padding: .15rem 1.25rem 0.15rem 0.5rem;
+            background-color: #3d3d3d;
+        }
+
+        .logItemCardBody.card-body.collapsed {
+            padding: 0.25rem;
+        }
+
+        .logItem.collapsed {
+            display: none;
+        }
+
+        .pinAsteriskWrapper {
+            min-width: 0.45rem;
+            display: inline-block;
+        }
+
+        .pinnedItemCopy .logItemCardHeader {
+            background-color: rgba(81, 33, 33, 0.4);
+        }
+
+        .pinnedItemCopy .logItemCardBody {
+            background-color: rgba(29, 12, 12, 0.82);
+        }
+
+        @-webkit-keyframes newItemHighlight {
             0% {
-                background-color: #5d5d5d;
+                background-color: #2d2d2d;
             }
             1% {
                 background-color: black;
             }
         }
 
-        .highlightBg{
-          -webkit-animation-name: highlight;
+        .newItemHighlightBg{
+          -webkit-animation-name: newItemHighlight;
             -webkit-animation-duration: 15000ms;
             -webkit-animation-iteration-count: 1;
             -webkit-animation-timing-function: linear;
-          -moz-animation-name: highlight;
+          -moz-animation-name: newItemHighlight;
             -moz-animation-duration: 15000ms;
             -moz-animation-iteration-count: 1;
             -moz-animation-timing-function: linear;
@@ -87,11 +130,24 @@ $wsUrl = $host . ':' . $port;
         </div>
     </div>
 
-    <div class="container-fluid logItemContainer toClone hide">
+    <div class="pinnedItems"></div>
+
+    <hr/>
+
+    <div class="container-fluid logItemContainer originalItem toClone hide">
         <div class="card text-white bg-dark mb-3">
-          <div class="logItemCardHeader card-header logItemHeader">
-              <div class="float-left timestamp"></div>
+          <div class="logItemCardHeader card-header">
+              <div class="float-left timestampWrapper">
+                  <div class="pinAsteriskWrapper"><span class="pinAsterisk hide">*</span></div>
+                  <span class="timestamp"></span>
+              </div>
               <div class="float-right logItemCounter"></div>
+              <div class="float-right logItemLinks">
+                  <a href="#" class="logItemPinLink">Pin</a>
+                  <a href="#" class="logItemHighlightLink">Highlight</a>
+                  <a href="#" class="logItemCollapseLink">Collapse</a>
+                  <a href="#" class="logItemRemoveLink">Remove</a>
+              </div>
           </div>
           <div class="logItemCardBody card-body">
             <pre class="logItem card-text"></pre>
@@ -99,15 +155,15 @@ $wsUrl = $host . ':' . $port;
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
 
 
          var itemCounter = 0;
-         var maxLogItems = 500;
-
+         var maxLogItems = 1000;
+         var pinnedPrefix = 'pinned-';
 
          function connect() {
              var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
@@ -126,16 +182,21 @@ $wsUrl = $host . ':' . $port;
                         .removeClass('toClone hide')
                         .addClass('countableItem')
                         .insertAfter($logItemToClone)
+                        .attr('id', 'item-' + itemCounter)
                         .find('.logItem')
                             .text(JSON.parse(e.data))
                         .end()
                         .find('.timestamp')
                             .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
-                            .find('.logItemCounter')
-                                .text(itemCounter)
                         .end()
-                        .find('.logItemCardHeader, .logItemCardBody')
-                            .addClass('highlightBg')
+                        .find('.logItemCounter')
+                            .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
+                        .end()
+                        .find('.logItemCardBody')
+                            .addClass('newItemHighlightBg')
+                        .end()
+                        .hide()
+                        .fadeIn(100)
                  ;
 
                  var $logItems = $('div.logItemContainer.countableItem');
@@ -186,9 +247,88 @@ $wsUrl = $host . ':' . $port;
              return ms;
          }
 
+         function pinItem($pinLink) {
+             var $container = $pinLink.closest('.logItemContainer');
+             togglePinnedItemContainer($container);
+             clonePinnedItemContainer($container);
+         }
+
+         function unpinItem($pinLink) {
+             $pinLink.removeClass('.pinned');
+             var $container = $pinLink.closest('.logItemContainer');
+             if ($container.hasClass('pinnedItemCopy')) {
+                 var id = $container.attr('id').substring(pinnedPrefix.length);
+                 $container.remove();
+                 togglePinnedItemContainer($('#' + id));
+             } else {
+                 togglePinnedItemContainer($container);
+                 $('#' + pinnedPrefix + $container.attr('id')).remove();
+             }
+         }
+
+         function togglePinnedItemContainer($container) {
+             var $pinLink = $container.find('.logItemPinLink');
+             $pinLink.toggleClass('pinned');
+             $pinLink.text($pinLink.text() === 'Pin' ? 'Unpin' : 'Pin');
+             $container
+                 .find('.pinAsterisk')
+                     .toggleClass('hide')
+             ;
+         }
+
+         function clonePinnedItemContainer($container) {
+             $container
+                .clone()
+                    .removeClass('originalItem')
+                    .attr('id', pinnedPrefix + $container.attr('id'))
+                    .addClass('pinnedItemCopy')
+                    .find('.logItemCardBody ')
+                        .removeClass('newItemHighlightBg')
+                    .end()
+                    .find('.logItemHighlightLink, .logItemRemoveLink')
+                        .remove()
+                    .end()
+                    .appendTo('.pinnedItems')
+             ;
+         }
+
          $(function(){
-             $(document).on('click', '.logItemHeader', function(){
-                 $(this).parent().find('.logItem').toggleClass('collapse')
+             $(document).on('click', '.logItemPinLink:not(.pinned)', function (e) {
+                 pinItem($(this));
+                 e.preventDefault();
+             });
+
+             $(document).on('click', '.logItemPinLink.pinned', function (e) {
+                 unpinItem($(this));
+                 e.preventDefault();
+             });
+
+             $(document).on('click', '.logItemHighlightLink', function (e) {
+                 $(this)
+                     .closest('.logItemContainer')
+                        .toggleClass('highlightItem')
+                        .find('.logItemCardHeader')
+                            .toggleClass('highlightItem');
+                 e.preventDefault();
+             });
+
+             $(document).on('click', '.logItemCollapseLink', function (e) {
+                 var $this = $(this);
+                 $this.text($this.text() === 'Collapse' ? 'Uncollapse' : 'Collapse');
+                 $this
+                     .closest('.logItemContainer')
+                        .find('.logItem, .card-body')
+                            .toggleClass('collapsed')
+                 ;
+
+                 e.preventDefault();
+             });
+
+             $(document).on('click', '.logItemRemoveLink', function (e) {
+                 $(this).closest('.logItemContainer').fadeOut(250, function () {
+                     $(this).remove();
+                 });
+                 e.preventDefault();
              });
          });
     </script>
