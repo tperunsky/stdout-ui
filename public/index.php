@@ -37,6 +37,10 @@ $wsUrl = $host . ':' . $port;
     <title>stdout.online</title>
 
     <style>
+        body {
+            background-color: #ececec
+        }
+
         pre.card-text {
             color: #ffffff;
         }
@@ -63,11 +67,11 @@ $wsUrl = $host . ':' . $port;
         }
 
         .logItemContainer.originalItem.highlightItem {
-            background-color: #FF9090;
+            background-color: #ef8080;
         }
 
         .logItemContainer.originalItem .card .logItemCardHeader.highlightItem {
-            background-color: #FF9090;
+            background-color: #ef8080;
         }
 
         .logItemCardHeader.card-header {
@@ -96,6 +100,14 @@ $wsUrl = $host . ':' . $port;
             background-color: rgba(29, 12, 12, 0.82);
         }
 
+        .freezeItem .logItemCardHeader {
+            background-color: #2e69a6;
+        }
+
+        .freezeItem .logItemCardBody {
+            background-color: #214264;
+        }
+
         @-webkit-keyframes newItemHighlight {
             0% {
                 background-color: #2d2d2d;
@@ -116,17 +128,39 @@ $wsUrl = $host . ':' . $port;
             -moz-animation-timing-function: linear;
         }
 
+        .freezeLogLink {
+            float: right;
+            outline: none;
+        }
+
+        body.frozen {
+            background-color: #ccccff;
+        }
+
+        h4.headerFlex {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .strikeThroughText {
+            text-decoration: line-through;
+        }
+
+
     </style>
 
   </head>
   <body>
     <div class="container-fluid">
         <div class="page-header">
-            <h3>
-                << stdout.online
-                <span class="badge badge-success hide connectionSuccess">Connected</span>
-                <span class="badge badge-warning connectionPending">Connecting...</span>
-            </h3>
+            <h4 class="headerFlex">
+                <span>
+                    stdout.online
+                    <span class="badge badge-success hide connectionSuccess">Connected</span>
+                    <span class="badge badge-warning connectionPending">Connecting...</span>
+                </span>
+                <a href="#" class="freezeLogLink"><small>Freeze</small></a>
+            </h4>
         </div>
     </div>
 
@@ -155,6 +189,21 @@ $wsUrl = $host . ':' . $port;
         </div>
     </div>
 
+    <div class="container-fluid freezeItem latestFreezeItem toClone hide">
+        <div class="card text-white bg-dark mb-3">
+          <div class="logItemCardHeader card-header">
+              <div class="float-left timestampWrapper">
+                  <div class="pinAsteriskWrapper"></div>
+                  <span class="timestamp"></span>
+              </div>
+          </div>
+          <div class="logItemCardBody card-body">
+            <pre class="logItem card-text"><span class="freezeText">Log frozen. All new messages are ignored.</span> <span class="unfreezeText"></span></pre>
+          </div>
+        </div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -164,6 +213,7 @@ $wsUrl = $host . ':' . $port;
          var itemCounter = 0;
          var maxLogItems = 1000;
          var pinnedPrefix = 'pinned-';
+         var frozen = false;
 
          function connect() {
              var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
@@ -175,28 +225,31 @@ $wsUrl = $host . ':' . $port;
              };
 
              wss.onmessage = function (e) {
+                 if (frozen) {
+                     return;
+                 }
                  itemCounter++;
                  var $logItemToClone = $('div.logItemContainer.toClone');
                  $logItemToClone
                      .clone()
-                        .removeClass('toClone hide')
-                        .addClass('countableItem')
-                        .insertAfter($logItemToClone)
-                        .attr('id', 'item-' + itemCounter)
-                        .find('.logItem')
-                            .text(JSON.parse(e.data))
-                        .end()
-                        .find('.timestamp')
-                            .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
-                        .end()
-                        .find('.logItemCounter')
-                            .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
-                        .end()
-                        .find('.logItemCardBody')
-                            .addClass('newItemHighlightBg')
-                        .end()
-                        .hide()
-                        .fadeIn(100)
+                         .removeClass('toClone hide')
+                         .addClass('countableItem')
+                         .insertAfter($logItemToClone)
+                         .attr('id', 'item-' + itemCounter)
+                         .find('.logItem')
+                             .text(JSON.parse(e.data))
+                         .end()
+                         .find('.timestamp')
+                             .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                         .end()
+                         .find('.logItemCounter')
+                             .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
+                         .end()
+                         .find('.logItemCardBody')
+                             .addClass('newItemHighlightBg')
+                         .end()
+                         .hide()
+                         .fadeIn(100)
                  ;
 
                  var $logItems = $('div.logItemContainer.countableItem');
@@ -278,18 +331,46 @@ $wsUrl = $host . ':' . $port;
 
          function clonePinnedItemContainer($container) {
              $container
-                .clone()
-                    .removeClass('originalItem')
-                    .attr('id', pinnedPrefix + $container.attr('id'))
-                    .addClass('pinnedItemCopy')
-                    .find('.logItemCardBody ')
-                        .removeClass('newItemHighlightBg')
-                    .end()
-                    .find('.logItemHighlightLink, .logItemRemoveLink')
-                        .remove()
-                    .end()
-                    .appendTo('.pinnedItems')
+                 .clone()
+                     .removeClass('originalItem')
+                     .attr('id', pinnedPrefix + $container.attr('id'))
+                     .addClass('pinnedItemCopy')
+                     .find('.logItemCardBody ')
+                         .removeClass('newItemHighlightBg')
+                     .end()
+                     .find('.logItemHighlightLink, .logItemRemoveLink')
+                         .remove()
+                     .end()
+                     .appendTo('.pinnedItems')
              ;
+         }
+
+         function freezeLog($freezeLink) {
+             $('body').toggleClass('frozen');
+             var $small = $freezeLink.find('small');
+             $small.text($small.text() === 'Freeze' ? 'Unfreeze' : 'Freeze');
+             frozen = !frozen;
+             if (frozen) {
+                 $('div.freezeItem.toClone')
+                     .clone()
+                         .removeClass('toClone hide')
+                         .insertAfter($('div.logItemContainer.toClone'))
+                         .find('.timestamp')
+                             .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                         .end()
+                         .hide()
+                         .fadeIn(100)
+                 ;
+             } else {
+                 $('.latestFreezeItem')
+                     .removeClass('latestFreezeItem')
+                     .find('.logItem .freezeText')
+                         .addClass('strikeThroughText')
+                     .end()
+                     .find('.logItem .unfreezeText')
+                         .html('Unfrozen at ' + getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                 ;
+             }
          }
 
          $(function(){
@@ -328,6 +409,11 @@ $wsUrl = $host . ':' . $port;
                  $(this).closest('.logItemContainer').fadeOut(250, function () {
                      $(this).remove();
                  });
+                 e.preventDefault();
+             });
+
+             $(document).on('click', '.freezeLogLink', function(e) {
+                 freezeLog($(this));
                  e.preventDefault();
              });
          });
