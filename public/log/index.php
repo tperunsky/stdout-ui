@@ -46,6 +46,10 @@ $wsUrl = $host . ':' . $port;
             outline: none;
         }
 
+        hr {
+            border-top: 1px solid rgba(255,255,255,.2);
+        }
+
         pre.card-text {
             color: #ffffff;
         }
@@ -171,10 +175,6 @@ $wsUrl = $host . ':' . $port;
             display: inline-block;
         }
 
-        .codeSnippetsWrapper .codeSnippetsCloseLink {
-            float: right;
-        }
-
     </style>
 
   </head>
@@ -205,38 +205,42 @@ $wsUrl = $host . ':' . $port;
         <div class="card">
             <div class="card-header">
                 <p class="codeSnippetsExplanation">Choose your programming language and use the provided code snippet to send log messages to this window.</p>
-                <a href="#" class="codeSnippetsCloseLink">Close</a>
+                <a href="#" class="codeSnippetsCloseLink float-right">Close</a>
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-php" role="tab"
                            aria-controls="pills-home" aria-selected="true">PHP</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-ruby" role="tab"
                            aria-controls="pills-profile" aria-selected="false">Ruby</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-java" role="tab"
                            aria-controls="pills-contact" aria-selected="false">Java</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python" role="tab"
+                           aria-controls="pills-contact" aria-selected="false">Python</a>
                     </li>
                 </ul>
             </div>
             <div class="card-body">
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                    <div class="tab-pane fade show active" id="pills-php" role="tabpanel"
                          aria-labelledby="pills-home-tab">
-                    <pre><code>(function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'<?= $sessionId ?>']));fclose($c);})
-('Your message goes here');</code></pre>
+                    <pre>
+(function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'<?= $sessionId ?>']));fclose($c);})
+('Your message goes here');</pre>
                     </div>
-                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-          <pre>
-not supported yet
-          </pre>
+                    <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <pre>not supported yet</pre>
                     </div>
-                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-          <pre>
-not supported yet
-          </pre>
+                    <div class="tab-pane fade" id="pills-java" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre>not supported yet</pre>
+                    </div>
+                    <div class="tab-pane fade" id="pills-python" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre>not supported yet</pre>
                     </div>
                 </div>
             </div>
@@ -245,7 +249,7 @@ not supported yet
         </div>
     </div>
 
-    <div class="container-fluid logItemContainer originalItem toClone hide">
+    <div class="container-fluid logItemContainer removableItem originalItem toClone hide">
         <div class="card text-white bg-dark mb-3">
           <div class="logItemCardHeader card-header">
               <div class="float-left timestampWrapper">
@@ -266,12 +270,15 @@ not supported yet
         </div>
     </div>
 
-    <div class="container-fluid freezeItem toClone hide">
+    <div class="container-fluid freezeItem removableItem toClone hide">
         <div class="card text-white bg-dark mb-3">
           <div class="logItemCardHeader card-header">
               <div class="float-left timestampWrapper">
                   <div class="pinAsteriskWrapper"></div>
                   <span class="timestamp"></span>
+              </div>
+              <div class="float-right freezeItemLinks hide">
+                  <a href="#" class="logItemRemoveLink">Remove</a>
               </div>
           </div>
           <div class="logItemCardBody card-body">
@@ -452,6 +459,9 @@ not supported yet
                      .end()
                      .find('.logItem .unfreezeText')
                          .html('Unfrozen at ' + getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                     .end()
+                     .find('.freezeItemLinks')
+                         .removeClass('hide')
                  ;
                  skippedItemCounter = 0;
              }
@@ -490,7 +500,7 @@ not supported yet
              });
 
              $(document).on('click', '.logItemRemoveLink', function (e) {
-                 $(this).closest('.logItemContainer').fadeOut(250, function () {
+                 $(this).closest('.removableItem').fadeOut(250, function () {
                      $(this).remove();
                  });
                  e.preventDefault();
