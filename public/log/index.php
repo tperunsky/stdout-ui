@@ -266,7 +266,7 @@ not supported yet
         </div>
     </div>
 
-    <div class="container-fluid freezeItem latestFreezeItem toClone hide">
+    <div class="container-fluid freezeItem toClone hide">
         <div class="card text-white bg-dark mb-3">
           <div class="logItemCardHeader card-header">
               <div class="float-left timestampWrapper">
@@ -275,7 +275,7 @@ not supported yet
               </div>
           </div>
           <div class="logItemCardBody card-body">
-            <pre class="logItem card-text"><span class="freezeText">Log frozen. All new messages are ignored.</span> <span class="unfreezeText"></span></pre>
+            <pre class="logItem card-text"><span class="freezeText">Log frozen. All new messages are ignored.</span> Discarded messages: <span class="freezeDiscardedMessages">0</span>. <span class="unfreezeText"></span></pre>
           </div>
         </div>
     </div>
@@ -287,6 +287,7 @@ not supported yet
 
 
          var itemCounter = 0;
+         var skippedItemCounter = 0;
          var maxLogItems = 1000;
          var pinnedPrefix = 'pinned-';
          var frozen = false;
@@ -305,6 +306,8 @@ not supported yet
                      $('.codeSnippetsWrapper').addClass('hide');
                  }
                  if (frozen) {
+                     skippedItemCounter++;
+                     $('.latestFreezeItem .freezeDiscardedMessages').text(skippedItemCounter);
                      return;
                  }
                  itemCounter++;
@@ -433,6 +436,7 @@ not supported yet
                  $('div.freezeItem.toClone')
                      .clone()
                          .removeClass('toClone hide')
+                         .addClass('latestFreezeItem')
                          .insertAfter($('div.logItemContainer.toClone'))
                          .find('.timestamp')
                              .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
@@ -449,6 +453,7 @@ not supported yet
                      .find('.logItem .unfreezeText')
                          .html('Unfrozen at ' + getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
                  ;
+                 skippedItemCounter = 0;
              }
          }
 
