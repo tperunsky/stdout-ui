@@ -180,7 +180,7 @@ $wsUrl = $host . ':' . $port;
   </head>
   <body>
 
-    <div class="container-fluid">
+    <header class="container-fluid">
         <div class="page-header">
             <h4 class="headerFlex">
                 <span>
@@ -195,7 +195,7 @@ $wsUrl = $host . ':' . $port;
 
             </h4>
         </div>
-    </div>
+    </header>
 
     <div class="pinnedItems"></div>
 
@@ -231,7 +231,7 @@ $wsUrl = $host . ':' . $port;
                          aria-labelledby="pills-home-tab">
                     <pre>
 (function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'<?= $sessionId ?>']));fclose($c);})
-('Your message goes here');</pre>
+('Your text goes here');</pre>
                     </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <pre>not supported yet</pre>
