@@ -1,0 +1,140 @@
+body {
+    background-color: #000000;
+    color: whitesmoke;
+}
+
+a {
+    outline: none;
+}
+
+hr {
+    border-top: 1px solid rgba(255, 255, 255, .2);
+}
+
+pre.card-text {
+    color: #ffffff;
+}
+
+.hide {
+    display: none !important;
+}
+
+.logItemLinks {
+    padding-right: 10px;
+}
+
+.logItemLinks > * {
+    padding-right: 15px;
+}
+
+.card-header.logItemCardHeader {
+    border-bottom: 1px solid rgb(52, 52, 52)
+}
+
+.logItemContainer.originalItem.highlightItem {
+    background-color: #d06868;
+}
+
+.logItemContainer.originalItem .card .logItemCardHeader.highlightItem {
+    background-color: #d06868;
+}
+
+.logItemCardHeader.card-header {
+    padding: .15rem 1.25rem 0.15rem 0.5rem;
+    background-color: #3d3d3d;
+}
+
+.logItemCardBody.card-body.collapsed {
+    padding: 0.25rem;
+}
+
+.logItem.collapsed {
+    display: none;
+}
+
+.pinAsteriskWrapper {
+    min-width: 0.45rem;
+    display: inline-block;
+}
+
+.pinnedItemCopy .logItemCardHeader {
+    background-color: rgba(81, 33, 33, 0.4);
+}
+
+.pinnedItemCopy .logItemCardBody {
+    background-color: rgba(29, 12, 12, 0.82);
+}
+
+.freezeItem .logItemCardHeader {
+    background-color: #2e69a6;
+}
+
+.freezeItem .logItemCardBody {
+    background-color: #214264;
+}
+
+.logItemCardBody {
+    background-color: #111111;
+}
+
+@-webkit-keyframes newItemHighlight {
+    0% {
+        background-color: #2d2d2d;
+    }
+    100% {
+        background-color: #111111;
+    }
+}
+
+.newItemHighlightBg {
+    -webkit-animation-name: newItemHighlight;
+    -webkit-animation-duration: 15000ms;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: newItemHighlight;
+    -moz-animation-duration: 15000ms;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: linear;
+}
+
+.freezeLogLink, .getCodeLink {
+    white-space: nowrap;
+    padding: 1rem;
+}
+
+body.frozen {
+    background-color: #06062f;
+}
+
+h4.headerFlex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.strikeThroughText {
+    text-decoration: line-through;
+}
+
+.codeSnippetsWrapper {
+    margin-bottom: 1rem;
+}
+
+.codeSnippetsWrapper .card {
+    background: #2d2d2d;
+    color: whitesmoke;
+}
+
+.codeSnippetsWrapper .card pre {
+    margin-bottom: 0rem;
+    color: whitesmoke;
+}
+
+.codeSnippetsWrapper .codeSnippetsExplanation {
+    display: inline-block;
+}
+
+.card.cardDarkNarrow {
+    background-color: #2d2d2d;
+    color: whitesmoke;
+    max-width: 30rem;
+}
