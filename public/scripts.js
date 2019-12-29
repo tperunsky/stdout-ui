@@ -247,6 +247,7 @@ function StdoutOnline() {
         //Copy code snippet into clipboard
         $(document).on('click', '.copyCodeLink', function (e) {
             parent.copyElementTextToClipboard($(this).siblings('pre.codeToCopy'));
+            $('span.copyCodeSuccess').stop().fadeIn(50).delay(200).fadeOut(1500);
             e.preventDefault();
         });
 

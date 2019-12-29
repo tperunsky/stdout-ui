@@ -138,3 +138,7 @@ h4.headerFlex {
     color: whitesmoke;
     max-width: 30rem;
 }
+
+span.copyCodeSuccess {
+    margin-left: 5px;
+}
