@@ -229,9 +229,10 @@ $wsUrl = $host . ':' . $port;
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-php" role="tabpanel"
                          aria-labelledby="pills-home-tab">
-                    <pre>
+                    <pre class="codeToCopy">
 (function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'<?= $sessionId ?>']));fclose($c);})
-('Your text goes here');</pre>
+('Your text goes here');</pre> <a href="#" class="copyCodeLink">Copy code</a>
+
                     </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <pre>not supported yet</pre>
@@ -293,148 +294,148 @@ $wsUrl = $host . ':' . $port;
     <script>
 
 
-         var itemCounter = 0;
-         var skippedItemCounter = 0;
-         var maxLogItems = 1000;
-         var pinnedPrefix = 'pinned-';
-         var frozen = false;
+        var itemCounter = 0;
+        var skippedItemCounter = 0;
+        var maxLogItems = 1000;
+        var pinnedPrefix = 'pinned-';
+        var frozen = false;
 
-         function connect() {
-             var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
-             wss.onopen = function () {
-                 console.log("Connection established! Registering session <?php echo $sessionId ?>");
-                 wss.send('StdoutOnline-Register-Session <?php echo $sessionId ?>');
-                 $('.connectionSuccess').removeClass('hide');
-                 $('.connectionPending').addClass('hide');
-             };
+        function connect() {
+            var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
+            wss.onopen = function () {
+                console.log("Connection established! Registering session <?php echo $sessionId ?>");
+                wss.send('StdoutOnline-Register-Session <?php echo $sessionId ?>');
+                $('.connectionSuccess').removeClass('hide');
+                $('.connectionPending').addClass('hide');
+            };
 
-             wss.onmessage = function (e) {
-                 if (itemCounter === 0) {
-                     $('.codeSnippetsWrapper').addClass('hide');
-                 }
-                 if (frozen) {
-                     skippedItemCounter++;
-                     $('.latestFreezeItem .freezeDiscardedMessages').text(skippedItemCounter);
-                     return;
-                 }
-                 itemCounter++;
-                 var $logItemToClone = $('div.logItemContainer.toClone');
-                 $logItemToClone
-                     .clone()
-                         .removeClass('toClone hide')
-                         .addClass('countableItem')
-                         .insertAfter($logItemToClone)
-                         .attr('id', 'item-' + itemCounter)
-                         .find('.logItem')
-                             .text(JSON.parse(e.data))
-                         .end()
-                         .find('.timestamp')
-                             .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
-                         .end()
-                         .find('.logItemCounter')
-                             .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
-                         .end()
-                         .find('.logItemCardBody')
-                             .addClass('newItemHighlightBg')
-                         .end()
-                         .hide()
-                         .fadeIn(100)
-                 ;
+            wss.onmessage = function (e) {
+                if (itemCounter === 0) {
+                    $('.codeSnippetsWrapper').addClass('hide');
+                }
+                if (frozen) {
+                    skippedItemCounter++;
+                    $('.latestFreezeItem .freezeDiscardedMessages').text(skippedItemCounter);
+                    return;
+                }
+                itemCounter++;
+                var $logItemToClone = $('div.logItemContainer.toClone');
+                $logItemToClone
+                    .clone()
+                        .removeClass('toClone hide')
+                        .addClass('countableItem')
+                        .insertAfter($logItemToClone)
+                        .attr('id', 'item-' + itemCounter)
+                        .find('.logItem')
+                            .text(JSON.parse(e.data))
+                        .end()
+                        .find('.timestamp')
+                            .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                        .end()
+                        .find('.logItemCounter')
+                            .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
+                        .end()
+                        .find('.logItemCardBody')
+                            .addClass('newItemHighlightBg')
+                        .end()
+                        .hide()
+                        .fadeIn(100)
+                ;
 
-                 var $logItems = $('div.logItemContainer.countableItem');
-                 if ($logItems.length > maxLogItems) {
-                     $logItems.last().remove();
-                 }
-             };
+                var $logItems = $('div.logItemContainer.countableItem');
+                if ($logItems.length > maxLogItems) {
+                    $logItems.last().remove();
+                }
+            };
 
-             wss.onclose = function (e) {
-                 $('.connectionSuccess').addClass('hide');
-                 $('.connectionPending').removeClass('hide');
-                 console.log('Socket is closed. Retrying connection...', e.reason);
-                 connect();
-             };
+            wss.onclose = function (e) {
+                $('.connectionSuccess').addClass('hide');
+                $('.connectionPending').removeClass('hide');
+                console.log('Socket is closed. Retrying connection...', e.reason);
+                connect();
+            };
 
-             wss.onerror = function (e) {
-                 $('.connectionSuccess').addClass('hide');
-                 $('.connectionPending').removeClass('hide');
-                 wss.close();
-             };
-         }
+            wss.onerror = function (e) {
+                $('.connectionSuccess').addClass('hide');
+                $('.connectionPending').removeClass('hide');
+                wss.close();
+            };
+        }
 
-         connect();
+        connect();
 
-         function getDateTimeStr() {
-             var now = new Date();
-             var year = now.getFullYear();
-             var month = now.getMonth() + 1;
-             var day = now.getDate();
-             var hour = now.getHours();
-             var min = now.getMinutes();
-             var sec = now.getSeconds();
+        function getDateTimeStr() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hour = now.getHours();
+            var min = now.getMinutes();
+            var sec = now.getSeconds();
 
-             month = (month.toString().length === 1) ? ('0' + month) : month;
-             day = (day.toString().length === 1) ? ('0' + day) : day;
-             hour = (hour.toString().length === 1) ? ('0' + hour) : hour;
-             min = (min.toString().length === 1) ? ('0' + min) : min;
-             sec = (sec.toString().length === 1) ? ('0' + sec) : sec;
+            month = (month.toString().length === 1) ? ('0' + month) : month;
+            day = (day.toString().length === 1) ? ('0' + day) : day;
+            hour = (hour.toString().length === 1) ? ('0' + hour) : hour;
+            min = (min.toString().length === 1) ? ('0' + min) : min;
+            sec = (sec.toString().length === 1) ? ('0' + sec) : sec;
 
-             return year + '/' + month + '/' + day + ' ' + hour + ':' + min + ':' + sec;
-         }
+            return year + '/' + month + '/' + day + ' ' + hour + ':' + min + ':' + sec;
+        }
 
-         function getCurrentMilliseconds() {
-             var ms = (new Date()).getMilliseconds();
-             ms = (ms.toString().length === 1) ? ('0' + ms) : ms;
-             ms = (ms.toString().length === 2) ? ('0' + ms) : ms;
+        function getCurrentMilliseconds() {
+            var ms = (new Date()).getMilliseconds();
+            ms = (ms.toString().length === 1) ? ('0' + ms) : ms;
+            ms = (ms.toString().length === 2) ? ('0' + ms) : ms;
 
-             return ms;
-         }
+            return ms;
+        }
 
-         function pinItem($pinLink) {
-             var $container = $pinLink.closest('.logItemContainer');
-             togglePinnedItemContainer($container);
-             clonePinnedItemContainer($container);
-         }
+        function pinItem($pinLink) {
+            var $container = $pinLink.closest('.logItemContainer');
+            togglePinnedItemContainer($container);
+            clonePinnedItemContainer($container);
+        }
 
-         function unpinItem($pinLink) {
-             $pinLink.removeClass('.pinned');
-             var $container = $pinLink.closest('.logItemContainer');
-             if ($container.hasClass('pinnedItemCopy')) {
-                 var id = $container.attr('id').substring(pinnedPrefix.length);
-                 $container.remove();
-                 togglePinnedItemContainer($('#' + id));
-             } else {
-                 togglePinnedItemContainer($container);
-                 $('#' + pinnedPrefix + $container.attr('id')).remove();
-             }
-         }
+        function unpinItem($pinLink) {
+            $pinLink.removeClass('.pinned');
+            var $container = $pinLink.closest('.logItemContainer');
+            if ($container.hasClass('pinnedItemCopy')) {
+                var id = $container.attr('id').substring(pinnedPrefix.length);
+                $container.remove();
+                togglePinnedItemContainer($('#' + id));
+            } else {
+                togglePinnedItemContainer($container);
+                $('#' + pinnedPrefix + $container.attr('id')).remove();
+            }
+        }
 
-         function togglePinnedItemContainer($container) {
-             var $pinLink = $container.find('.logItemPinLink');
-             $pinLink.toggleClass('pinned');
-             $pinLink.text($pinLink.text() === 'Pin' ? 'Unpin' : 'Pin');
-             $container
-                 .find('.pinAsterisk')
-                     .toggleClass('hide')
-             ;
-         }
+        function togglePinnedItemContainer($container) {
+            var $pinLink = $container.find('.logItemPinLink');
+            $pinLink.toggleClass('pinned');
+            $pinLink.text($pinLink.text() === 'Pin' ? 'Unpin' : 'Pin');
+            $container
+                .find('.pinAsterisk')
+                    .toggleClass('hide')
+            ;
+        }
 
-         function clonePinnedItemContainer($container) {
-             $container
-                 .clone()
-                     .removeClass('originalItem')
-                     .attr('id', pinnedPrefix + $container.attr('id'))
-                     .addClass('pinnedItemCopy')
-                     .find('.logItemCardBody ')
-                         .removeClass('newItemHighlightBg')
-                     .end()
-                     .find('.logItemHighlightLink, .logItemRemoveLink')
-                         .remove()
-                     .end()
-                     .appendTo('.pinnedItems')
-             ;
-         }
+        function clonePinnedItemContainer($container) {
+            $container
+                .clone()
+                    .removeClass('originalItem')
+                    .attr('id', pinnedPrefix + $container.attr('id'))
+                    .addClass('pinnedItemCopy')
+                    .find('.logItemCardBody ')
+                        .removeClass('newItemHighlightBg')
+                    .end()
+                    .find('.logItemHighlightLink, .logItemRemoveLink')
+                        .remove()
+                    .end()
+                    .appendTo('.pinnedItems')
+            ;
+        }
 
-         function freezeLog($freezeLink) {
+        function freezeLog($freezeLink) {
              $('body').toggleClass('frozen');
              var $small = $freezeLink.find('small');
              $small.text($small.text() === 'Freeze' ? 'Unfreeze' : 'Freeze');
@@ -467,61 +468,74 @@ $wsUrl = $host . ':' . $port;
              }
          }
 
-         $(function(){
-             $(document).on('click', '.logItemPinLink:not(.pinned)', function (e) {
-                 pinItem($(this));
-                 e.preventDefault();
-             });
+        function copyElementTextToClipboard(jqueryObject) {
+            plainJsDomElement = jqueryObject[0];
+            var range = document.createRange();
+            range.selectNode(plainJsDomElement);
+            window.getSelection().removeAllRanges(); // clear current selection
+            window.getSelection().addRange(range); // to select text
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();// to deselect
+        }
 
-             $(document).on('click', '.logItemPinLink.pinned', function (e) {
-                 unpinItem($(this));
-                 e.preventDefault();
-             });
+        $(function(){
+            $(document).on('click', '.copyCodeLink', function (e) {
+                copyElementTextToClipboard($(this).siblings('pre.codeToCopy'));
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.logItemHighlightLink', function (e) {
-                 $(this)
-                     .closest('.logItemContainer')
-                        .toggleClass('highlightItem')
-                        .find('.logItemCardHeader')
-                            .toggleClass('highlightItem');
-                 e.preventDefault();
-             });
+            $(document).on('click', '.logItemPinLink:not(.pinned)', function (e) {
+                pinItem($(this));
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.logItemCollapseLink', function (e) {
-                 var $this = $(this);
-                 $this.text($this.text() === 'Collapse' ? 'Uncollapse' : 'Collapse');
-                 $this
-                     .closest('.logItemContainer')
-                        .find('.logItem, .card-body')
-                            .toggleClass('collapsed')
-                 ;
+            $(document).on('click', '.logItemPinLink.pinned', function (e) {
+                unpinItem($(this));
+                e.preventDefault();
+            });
 
-                 e.preventDefault();
-             });
+            $(document).on('click', '.logItemHighlightLink', function (e) {
+                $(this)
+                    .closest('.logItemContainer')
+                       .toggleClass('highlightItem')
+                       .find('.logItemCardHeader')
+                           .toggleClass('highlightItem');
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.logItemRemoveLink', function (e) {
-                 $(this).closest('.removableItem').fadeOut(250, function () {
-                     $(this).remove();
-                 });
-                 e.preventDefault();
-             });
+            $(document).on('click', '.logItemCollapseLink', function (e) {
+                var $this = $(this);
+                $this.text($this.text() === 'Collapse' ? 'Uncollapse' : 'Collapse');
+                $this
+                    .closest('.logItemContainer')
+                       .find('.logItem, .card-body')
+                           .toggleClass('collapsed')
+                ;
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.getCodeLink', function(e) {
-                 $('.codeSnippetsWrapper').removeClass('hide');
-                 e.preventDefault();
-             });
+            $(document).on('click', '.logItemRemoveLink', function (e) {
+                $(this).closest('.removableItem').fadeOut(250, function () {
+                    $(this).remove();
+                });
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.codeSnippetsCloseLink', function(e) {
-                 $('.codeSnippetsWrapper').addClass('hide');
-                 e.preventDefault();
-             });
+            $(document).on('click', '.getCodeLink', function(e) {
+                $('.codeSnippetsWrapper').removeClass('hide');
+                e.preventDefault();
+            });
 
-             $(document).on('click', '.freezeLogLink', function(e) {
+            $(document).on('click', '.codeSnippetsCloseLink', function(e) {
+                $('.codeSnippetsWrapper').addClass('hide');
+                e.preventDefault();
+            });
 
-                 freezeLog($(this));
-                 e.preventDefault();
-             });
-         });
+            $(document).on('click', '.freezeLogLink', function(e) {
+                freezeLog($(this));
+                e.preventDefault();
+            });
+        });
     </script>
   </body>
 </html>
