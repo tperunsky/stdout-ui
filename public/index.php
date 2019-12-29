@@ -63,7 +63,7 @@
           </header>
       </div>
       <div class="container">
-          <div class="row justify-content-md-center">
+          <div class="row justify-content-center">
               <div class="card cardDark sessionSetup">
                   <div class="card-body">
                       <label for="sessionId">Your session id</label>
@@ -76,28 +76,28 @@
                   </div>
               </div>
           </div>
-          <div class="row justify-content-md-center">
+          <div class="row justify-content-center">
               <div class="card cardDark explanation">
                   <div class="card-body">
                       <h5 class="text-center">What's this?</h5>
                       <p>This website provides a way to send arbitrary text to the browser from any program with zero setup.</p>
                       <h5 class="text-center">How does it work</h5>
                       <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your program. The output will show up in your browser.</p>
-                      <h5 class="text-center">Y tho</h5>
-                      <p>This is the kind of tool which I "shouldn't" need, but nevertheless over the years I found myself in situations where it would have been a godsend.
-                          On multiple occasions I urgently needed to debug something but I didn't have a quick way to output stuff - maybe I didn't have ssh access,
-                          maybe the script ran in the background and the output was redirected to /dev/null, maybe logging was not injected in the class I was looking at...
-                          In each case it probably only took a few minutes to find a workaround, but those were minutes I would have preferred to spend actually debugging.
-                          Being able to just paste a one-liner literally anywhere in the code to dump any value I want is exactly what I needed. So I decided to write an app
-                          that allows me to do exactly that.
-                      </p>
                       <h5 class="text-center">Is it safe?</h5>
                       <p>
                           No. Don't use it for any sensitive data for two reasons:
                           <ul>
                               <li>Anyone who guesses your session id can see your log output and you won't know about it.</li>
-                              <li>Any data you send to the stdout.online TCP server may end up in logs and memory dumps. Having said that, nothing is stored on purpose server side.</li>
+                              <li>Any data you send to the stdout.online TCP server may end up in logs and memory dumps. Having said that, nothing is intentionally stored on the server.</li>
                           </ul>
+                      </p>
+                      <h5 class="text-center">y tho</h5>
+                      <p>This is the kind of tool which I "shouldn't" need, but nevertheless over the years I found myself in situations where it would have been a godsend.
+                          On multiple occasions I urgently needed to debug something but I didn't have a quick way to output stuff - maybe I didn't have ssh access,
+                          maybe the script ran in the background and the output was redirected to /dev/null, maybe logging was not injected in the class I was looking at...
+                          In each case it probably only took a few minutes to find a workaround, but those were minutes I would have preferred to spend actually debugging.
+                          Being able to just paste a one-liner literally anywhere in the code to dump any value I want is exactly what I needed. So I decided to write an app
+                          that allows me to do that.
                       </p>
                   </div>
               </div>
