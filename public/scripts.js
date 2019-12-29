@@ -327,7 +327,12 @@ function StdoutOnline() {
         $('#sessionId').val($('#serverUnique').val() + clientUnique);
     };
 
+    this.javascriptLoaded = function() {
+        $('.hideOnJs').addClass('hide');
+    };
+
     this.init = function () {
+        parent.javascriptLoaded();
         parent.displayLastSessionId();
         parent.generateSessionId();
         parent.attachEventListeners();

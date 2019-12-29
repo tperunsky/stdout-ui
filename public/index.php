@@ -33,6 +33,7 @@ $wssUrl = $host . ':' . $port;
     <title>stdout.online</title>
 </head>
 <body>
+
 <div class="welcome">
     <div class="container-fluid">
         <header class="container-fluid">
@@ -46,8 +47,17 @@ $wssUrl = $host . ':' . $port;
         </header>
     </div>
     <div class="container">
+        <noscript>
+            <div class="hideOnJs row justify-content-center">
+                <div class="card cardDarkNarrow">
+                    <div class="card-body">
+                        <h4 class="jumbotron text-danger">This website needs javascript.</h4>
+                    </div>
+                </div>
+            </div>
+        </noscript>
         <div class="row justify-content-center">
-            <div class="card cardDarkNarrow sessionSetup">
+            <div class="sessionSetup card cardDarkNarrow">
                 <div class="card-body">
                     <label for="sessionId">Your session id</label>
                     <div class="input-group mb-3">
@@ -70,11 +80,13 @@ $wssUrl = $host . ':' . $port;
                         setup.
                     </p>
                     <hr/>
+
                     <h5 class="text-center">How do I use it?</h5>
                     <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your
                         program. The output will show up in your browser.
                     </p>
                     <hr/>
+
                     <h5 class="text-center">How does it work</h5>
                     <p>The code snippet you can copy after you click "Start logging" above sends a request to the
                         stdout.online TCP server. The TCP server passes it to a WebSocket server which your browser
@@ -82,20 +94,22 @@ $wssUrl = $host . ':' . $port;
                         making TCP connections.
                     </p>
                     <hr/>
+
                     <h5 class="text-center">Is it safe?</h5>
                     <p>
                         No. Don't use it for any sensitive data for two reasons:
-                        <ul>
-                            <li>
-                                Anyone who guesses your session id can see your log output and you won't know about it.
-                            </li>
-                            <li>
-                                Any data you send to the stdout.online TCP server may end up in logs and memory dumps.
-                                Having said that, nothing is intentionally stored on the server.
-                            </li>
-                        </ul>
                     </p>
+                    <ul>
+                        <li>
+                            Anyone who guesses your session id can see your log output and you won't know about it.
+                        </li>
+                        <li>
+                            Any data you send to the stdout.online TCP server may end up in logs and memory dumps.
+                            Having said that, nothing is intentionally stored on the server.
+                        </li>
+                    </ul>
                     <hr/>
+
                     <h5 class="text-center">y tho</h5>
                     <p>This is the kind of tool which I "shouldn't" need, but nevertheless over the years I found myself
                         in situations where it would have been a godsend. On multiple occasions I urgently needed to
@@ -166,8 +180,8 @@ $wssUrl = $host . ':' . $port;
                             <pre class="codeToCopy">
 (function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'{%%sessionId%%}']));fclose($c);})
 ('Your text goes here');</pre>
-                        <a href="#" class="copyCodeLink">Copy code</a>
-
+                        <a href="#" class="copyCodeLink">Copy code snippet</a>
+                        <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <pre>not supported yet</pre>
