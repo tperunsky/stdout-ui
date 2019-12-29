@@ -1,7 +1,10 @@
 <?php
+$config = require __DIR__ . '/../config/config.php';
+$host = $config['websocketServer']['host'];
+$port = $config['websocketServer']['port'];
+$wsUrl = $host . ':' . $port;
 
 ?>
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -41,7 +44,133 @@
             border-top: 1px solid rgba(255,255,255,.2);
         }
 
-        .card.cardDark {
+        pre.card-text {
+            color: #ffffff;
+        }
+
+        .hide {
+            display: none !important;
+        }
+
+        .logItemLinks {
+            padding-right: 10px;
+        }
+
+        .logItemLinks > * {
+            padding-right: 15px;
+        }
+
+        .logItemLinks a.logItemPinLink {
+            color:
+        }
+
+        .card-header.logItemCardHeader {
+            border-bottom: 1px solid rgb(52, 52, 52)
+        }
+
+        .logItemContainer.originalItem.highlightItem {
+            background-color: #d06868;
+        }
+
+        .logItemContainer.originalItem .card .logItemCardHeader.highlightItem {
+            background-color: #d06868;
+        }
+
+        .logItemCardHeader.card-header {
+            padding: .15rem 1.25rem 0.15rem 0.5rem;
+            background-color: #3d3d3d;
+        }
+
+        .logItemCardBody.card-body.collapsed {
+            padding: 0.25rem;
+        }
+
+        .logItem.collapsed {
+            display: none;
+        }
+
+        .pinAsteriskWrapper {
+            min-width: 0.45rem;
+            display: inline-block;
+        }
+
+        .pinnedItemCopy .logItemCardHeader {
+            background-color: rgba(81, 33, 33, 0.4);
+        }
+
+        .pinnedItemCopy .logItemCardBody {
+            background-color: rgba(29, 12, 12, 0.82);
+        }
+
+        .freezeItem .logItemCardHeader {
+            background-color: #2e69a6;
+        }
+
+        .freezeItem .logItemCardBody {
+            background-color: #214264;
+        }
+
+        .logItemCardBody {
+            background-color: #111111;
+        }
+
+        @-webkit-keyframes newItemHighlight {
+            0% {
+                background-color: #2d2d2d;
+            }
+            100% {
+                background-color: #111111;
+            }
+        }
+
+        .newItemHighlightBg{
+          -webkit-animation-name: newItemHighlight;
+            -webkit-animation-duration: 15000ms;
+            -webkit-animation-iteration-count: 1;
+            -webkit-animation-timing-function: linear;
+          -moz-animation-name: newItemHighlight;
+            -moz-animation-duration: 15000ms;
+            -moz-animation-iteration-count: 1;
+            -moz-animation-timing-function: linear;
+        }
+
+        .freezeLogLink, .getCodeLink{
+            white-space: nowrap;
+            padding: 1rem;
+        }
+
+        body.frozen {
+            background-color: #06062f;
+        }
+
+        h4.headerFlex {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .strikeThroughText {
+            text-decoration: line-through;
+        }
+
+        .codeSnippetsWrapper {
+            margin-bottom: 1rem;
+        }
+
+        .codeSnippetsWrapper .card {
+            background: #2d2d2d;
+            color: whitesmoke;
+        }
+
+        .codeSnippetsWrapper .card pre {
+            margin-bottom: 0rem;
+            color: whitesmoke;
+        }
+
+        .codeSnippetsWrapper .codeSnippetsExplanation {
+            display: inline-block;
+        }
+
+        .card.cardDarkNarrow {
             background-color: #2d2d2d;
             color: whitesmoke;
             max-width: 30rem;
@@ -51,58 +180,177 @@
 
   </head>
   <body>
-      <div class="container-fluid">
-          <header class="container-fluid">
-              <div class="page-header">
-                  <h4 class="headerFlex">
-                       <span>
-                           stdout.online
-                       </span>
-                  </h4>
-              </div>
-          </header>
-      </div>
-      <div class="container">
-          <div class="row justify-content-center">
-              <div class="card cardDark sessionSetup">
-                  <div class="card-body">
-                      <label for="sessionId">Your session id</label>
-                      <div class="input-group mb-3">
-                          <input type="text" class="sessionIdInput form-control" id="sessionId">
-                          <div class="input-group-append">
-                              <button class="btn btn-primary" id="startLogging" type="button">Start logging</button>
+      <div class="welcome">
+          <div class="container-fluid">
+              <header class="container-fluid">
+                  <div class="page-header">
+                      <h4 class="headerFlex">
+                           <span>
+                               stdout.online
+                           </span>
+                      </h4>
+                  </div>
+              </header>
+          </div>
+          <div class="container">
+              <div class="row justify-content-center">
+                  <div class="card cardDarkNarrow sessionSetup">
+                      <div class="card-body">
+                          <label for="sessionId">Your session id</label>
+                          <div class="input-group mb-3">
+                              <input type="text" class="sessionIdInput form-control" id="sessionId">
+                              <div class="input-group-append">
+                                  <button class="btn btn-primary" id="startLogging" type="button">Start logging</button>
+                              </div>
                           </div>
+                          <a href="#" class="lastSessionIdLink hide">Use my last session id: <span class="lastSessionId"></span></a>
+                      </div>
+                  </div>
+              </div>
+              <div class="row justify-content-center">
+                  <div class="card cardDarkNarrow explanation">
+                      <div class="card-body">
+                          <h5 class="text-center">What's this?</h5>
+                          <p>This website provides a way to send arbitrary text to the browser from any program with zero setup.</p>
+                          <hr/>
+                          <h5 class="text-center">How does it work</h5>
+                          <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your program. The output will show up in your browser. Your session id will be saved in local storage.</p>
+                          <hr/>
+                          <h5 class="text-center">Is it safe?</h5>
+                          <p>
+                              No. Don't use it for any sensitive data for two reasons:
+                              <ul>
+                                  <li>Anyone who guesses your session id can see your log output and you won't know about it.</li>
+                                  <li>Any data you send to the stdout.online TCP server may end up in logs and memory dumps. Having said that, nothing is intentionally stored on the server.</li>
+                              </ul>
+                          </p>
+                          <hr/>
+                          <h5 class="text-center">y tho</h5>
+                          <p>This is the kind of tool which I "shouldn't" need, but nevertheless over the years I found myself in situations where it would have been a godsend.
+                              On multiple occasions I urgently needed to debug something but I didn't have a quick way to output stuff - maybe I didn't have ssh access,
+                              maybe the script ran in the background and the output was redirected to /dev/null, maybe logging was not injected in the class I was looking at...
+                              In each case it probably only took a few minutes to find a workaround, but those were minutes I would have preferred to spend actually debugging.
+                              Being able to just paste a one-liner literally anywhere in the code to dump any value I want is exactly what I needed. So I decided to write an app
+                              that allows me to do that.
+                          </p>
                       </div>
                   </div>
               </div>
           </div>
-          <div class="row justify-content-center">
-              <div class="card cardDark explanation">
+      </div>
+      <div class="theLog hide">
+          <header class="container-fluid">
+              <div class="page-header">
+                  <h4 class="headerFlex">
+                    <span>
+                        stdout.online
+                        <span class="badge badge-success hide connectionSuccess">Connected</span>
+                        <span class="badge badge-warning connectionPending">Connecting...</span>
+                        <span class="badge badge-info sessionIdBadge"></span>
+                    </span>
+                      <span>
+                        <a href="#" class="getCodeLink"><small>Get code</small></a>
+                        <a href="#" class="freezeLogLink"><small>Freeze</small></a>
+                    </span>
+
+                  </h4>
+              </div>
+          </header>
+
+          <div class="pinnedItems"></div>
+
+          <hr/>
+
+          <div class="container-fluid codeSnippetsWrapper">
+              <div class="card">
+                  <div class="card-header">
+                      <p class="codeSnippetsExplanation">Choose your programming language and use the provided code snippet
+                          to send log messages to this window.</p>
+                      <a href="#" class="codeSnippetsCloseLink float-right">Close</a>
+                      <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                          <li class="nav-item">
+                              <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-php" role="tab"
+                                 aria-controls="pills-home" aria-selected="true">PHP</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-ruby" role="tab"
+                                 aria-controls="pills-profile" aria-selected="false">Ruby</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-java" role="tab"
+                                 aria-controls="pills-contact" aria-selected="false">Java</a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python" role="tab"
+                                 aria-controls="pills-contact" aria-selected="false">Python</a>
+                          </li>
+                      </ul>
+                  </div>
                   <div class="card-body">
-                      <h5 class="text-center">What's this?</h5>
-                      <p>This website provides a way to send arbitrary text to the browser from any program with zero setup.</p>
-                      <h5 class="text-center">How does it work</h5>
-                      <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your program. The output will show up in your browser.</p>
-                      <h5 class="text-center">Is it safe?</h5>
-                      <p>
-                          No. Don't use it for any sensitive data for two reasons:
-                          <ul>
-                              <li>Anyone who guesses your session id can see your log output and you won't know about it.</li>
-                              <li>Any data you send to the stdout.online TCP server may end up in logs and memory dumps. Having said that, nothing is intentionally stored on the server.</li>
-                          </ul>
-                      </p>
-                      <h5 class="text-center">y tho</h5>
-                      <p>This is the kind of tool which I "shouldn't" need, but nevertheless over the years I found myself in situations where it would have been a godsend.
-                          On multiple occasions I urgently needed to debug something but I didn't have a quick way to output stuff - maybe I didn't have ssh access,
-                          maybe the script ran in the background and the output was redirected to /dev/null, maybe logging was not injected in the class I was looking at...
-                          In each case it probably only took a few minutes to find a workaround, but those were minutes I would have preferred to spend actually debugging.
-                          Being able to just paste a one-liner literally anywhere in the code to dump any value I want is exactly what I needed. So I decided to write an app
-                          that allows me to do that.
-                      </p>
+                      <div class="tab-content" id="pills-tabContent">
+                          <div class="tab-pane fade show active" id="pills-php" role="tabpanel"
+                               aria-labelledby="pills-home-tab">
+                        <pre class="codeToCopy">
+(function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'{%%sessionId%%}']));fclose($c);})
+('Your text goes here');</pre>
+                              <a href="#" class="copyCodeLink">Copy code</a>
+
+                          </div>
+                          <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
+                              <pre>not supported yet</pre>
+                          </div>
+                          <div class="tab-pane fade" id="pills-java" role="tabpanel" aria-labelledby="pills-contact-tab">
+                              <pre>not supported yet</pre>
+                          </div>
+                          <div class="tab-pane fade" id="pills-python" role="tabpanel" aria-labelledby="pills-contact-tab">
+                              <pre>not supported yet</pre>
+                          </div>
+                      </div>
+                  </div>
+
+
+              </div>
+          </div>
+
+          <div class="container-fluid logItemContainer removableItem originalItem toClone hide">
+              <div class="card text-white bg-dark mb-3">
+                  <div class="logItemCardHeader card-header">
+                      <div class="float-left timestampWrapper">
+                          <div class="pinAsteriskWrapper"><span class="pinAsterisk hide">*</span></div>
+                          <span class="timestamp"></span>
+                      </div>
+                      <div class="float-right logItemCounter"></div>
+                      <div class="float-right logItemLinks">
+                          <a href="#" class="logItemPinLink">Pin</a>
+                          <a href="#" class="logItemHighlightLink">Highlight</a>
+                          <a href="#" class="logItemCollapseLink">Collapse</a>
+                          <a href="#" class="logItemRemoveLink">Remove</a>
+                      </div>
+                  </div>
+                  <div class="logItemCardBody card-body">
+                      <pre class="logItem card-text"></pre>
                   </div>
               </div>
           </div>
 
+          <div class="container-fluid freezeItem removableItem toClone hide">
+              <div class="card text-white bg-dark mb-3">
+                  <div class="logItemCardHeader card-header">
+                      <div class="float-left timestampWrapper">
+                          <div class="pinAsteriskWrapper"></div>
+                          <span class="timestamp"></span>
+                      </div>
+                      <div class="float-right freezeItemLinks hide">
+                          <a href="#" class="logItemRemoveLink">Remove</a>
+                      </div>
+                  </div>
+                  <div class="logItemCardBody card-body">
+                      <pre class="logItem card-text"><span
+                                  class="freezeText">Log frozen. All new messages are ignored.</span> Discarded messages: <span
+                                  class="freezeDiscardedMessages">0</span>. <span class="unfreezeText"></span></pre>
+                  </div>
+              </div>
+          </div>
       </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -110,17 +358,288 @@
     <script>
         var serverUnique = "<?= substr(uniqid('', false),-4) ?>";
         var clientUnique = Math.random().toString(36).substring(4, 12)
+        var sessionId = '';
+        var itemCounter = 0;
+        var skippedItemCounter = 0;
+        var maxLogItems = 1000;
+        var pinnedPrefix = 'pinned-';
+        var frozen = false;
+        var localStorageKey = 'stdoutSessionId';
+
+        function connect() {
+            if (sessionId.length === 0) {
+                alert('No session id defined. Please refresh the page and try again');
+            }
+            var wss = new WebSocket('wss://<?php echo $wsUrl ?>');
+            wss.onopen = function () {
+                console.log("Connection established! Registering session " + sessionId);
+                wss.send('StdoutOnline-Register-Session ' + sessionId);
+                $('.connectionSuccess').removeClass('hide');
+                $('.connectionPending').addClass('hide');
+            };
+
+            wss.onmessage = function (e) {
+                if (itemCounter === 0) {
+                    $('.codeSnippetsWrapper').addClass('hide');
+                }
+                if (frozen) {
+                    skippedItemCounter++;
+                    $('.latestFreezeItem .freezeDiscardedMessages').text(skippedItemCounter);
+                    return;
+                }
+                itemCounter++;
+                var $logItemToClone = $('div.logItemContainer.toClone');
+                $logItemToClone
+                    .clone()
+                        .removeClass('toClone hide')
+                        .addClass('countableItem')
+                        .insertAfter($logItemToClone)
+                        .attr('id', 'item-' + itemCounter)
+                        .find('.logItem')
+                            .text(JSON.parse(e.data))
+                        .end()
+                        .find('.timestamp')
+                            .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                        .end()
+                        .find('.logItemCounter')
+                            .html('<a href="#item-' + itemCounter + '">#' + itemCounter + '</a>')
+                        .end()
+                        .find('.logItemCardBody')
+                            .addClass('newItemHighlightBg')
+                        .end()
+                        .hide()
+                        .fadeIn(100)
+                ;
+
+                var $logItems = $('div.logItemContainer.countableItem');
+                if ($logItems.length > maxLogItems) {
+                    $logItems.last().remove();
+                }
+            };
+
+            wss.onclose = function (e) {
+                $('.connectionSuccess').addClass('hide');
+                $('.connectionPending').removeClass('hide');
+                console.log('Socket is closed. Retrying connection...', e.reason);
+                connect();
+            };
+
+            wss.onerror = function (e) {
+                $('.connectionSuccess').addClass('hide');
+                $('.connectionPending').removeClass('hide');
+                wss.close();
+            };
+        }
+
+        function getDateTimeStr() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;
+            var day = now.getDate();
+            var hour = now.getHours();
+            var min = now.getMinutes();
+            var sec = now.getSeconds();
+
+            month = (month.toString().length === 1) ? ('0' + month) : month;
+            day = (day.toString().length === 1) ? ('0' + day) : day;
+            hour = (hour.toString().length === 1) ? ('0' + hour) : hour;
+            min = (min.toString().length === 1) ? ('0' + min) : min;
+            sec = (sec.toString().length === 1) ? ('0' + sec) : sec;
+
+            return year + '/' + month + '/' + day + ' ' + hour + ':' + min + ':' + sec;
+        }
+
+        function getCurrentMilliseconds() {
+            var ms = (new Date()).getMilliseconds();
+            ms = (ms.toString().length === 1) ? ('0' + ms) : ms;
+            ms = (ms.toString().length === 2) ? ('0' + ms) : ms;
+
+            return ms;
+        }
+
+        function pinItem($pinLink) {
+            var $container = $pinLink.closest('.logItemContainer');
+            togglePinnedItemContainer($container);
+            clonePinnedItemContainer($container);
+        }
+
+        function unpinItem($pinLink) {
+            $pinLink.removeClass('.pinned');
+            var $container = $pinLink.closest('.logItemContainer');
+            if ($container.hasClass('pinnedItemCopy')) {
+                var id = $container.attr('id').substring(pinnedPrefix.length);
+                $container.remove();
+                togglePinnedItemContainer($('#' + id));
+            } else {
+                togglePinnedItemContainer($container);
+                $('#' + pinnedPrefix + $container.attr('id')).remove();
+            }
+        }
+
+        function togglePinnedItemContainer($container) {
+            var $pinLink = $container.find('.logItemPinLink');
+            $pinLink.toggleClass('pinned');
+            $pinLink.text($pinLink.text() === 'Pin' ? 'Unpin' : 'Pin');
+            $container
+                .find('.pinAsterisk')
+                    .toggleClass('hide')
+            ;
+        }
+
+        function clonePinnedItemContainer($container) {
+            $container
+                .clone()
+                    .removeClass('originalItem')
+                    .attr('id', pinnedPrefix + $container.attr('id'))
+                    .addClass('pinnedItemCopy')
+                    .find('.logItemCardBody ')
+                        .removeClass('newItemHighlightBg')
+                    .end()
+                    .find('.logItemHighlightLink, .logItemRemoveLink')
+                        .remove()
+                    .end()
+                    .appendTo('.pinnedItems')
+            ;
+        }
+
+        function freezeLog($freezeLink) {
+             $('body').toggleClass('frozen');
+             var $small = $freezeLink.find('small');
+             $small.text($small.text() === 'Freeze' ? 'Unfreeze' : 'Freeze');
+             frozen = !frozen;
+             if (frozen) {
+                 $('div.freezeItem.toClone')
+                     .clone()
+                         .removeClass('toClone hide')
+                         .addClass('latestFreezeItem')
+                         .insertAfter($('div.logItemContainer.toClone'))
+                         .find('.timestamp')
+                             .html(getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                         .end()
+                         .hide()
+                         .fadeIn(100)
+                 ;
+             } else {
+                 $('.latestFreezeItem')
+                     .removeClass('latestFreezeItem')
+                     .find('.logItem .freezeText')
+                         .addClass('strikeThroughText')
+                     .end()
+                     .find('.logItem .unfreezeText')
+                         .html('Unfrozen at ' + getDateTimeStr() + '<small>.' + getCurrentMilliseconds() + '</small>')
+                     .end()
+                     .find('.freezeItemLinks')
+                         .removeClass('hide')
+                 ;
+                 skippedItemCounter = 0;
+             }
+         }
+
+        function copyElementTextToClipboard(jqueryObject) {
+            var range = document.createRange();
+            range.selectNode(jqueryObject[0]);
+            window.getSelection().removeAllRanges(); // clear current selection
+            window.getSelection().addRange(range); // to select text
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();// to deselect
+        }
+
+        function startLogging() {
+            $('div.welcome').addClass('hide');
+            $('div.theLog').removeClass('hide');
+
+            $('.codeToCopy').each(function(i, codeSnippet) {
+                var $codeSnippet = $(codeSnippet);
+                var text = $codeSnippet.text().replace('{%%sessionId%%}', sessionId);
+                $codeSnippet.text(text);
+            });
+
+            $('.sessionIdBadge').text(sessionId);
+
+            localStorage.setItem(localStorageKey, sessionId);
+
+            connect();
+        }
 
         $(function(){
+            if (localStorage.getItem(localStorageKey) !== null && localStorage.getItem(localStorageKey).length > 0) {
+                $('.lastSessionIdLink')
+                    .removeClass('hide')
+                    .find('.lastSessionId')
+                        .text(localStorage.getItem(localStorageKey))
+                ;
+            }
+
             $('#sessionId').val(serverUnique + clientUnique);
 
-            $(document).on('click', '#startLogging', function(){
-                var sessionId = $('#sessionId').val();
-                if (sessionId.length > 0) {
-                    location.href = '/log?id=' + sessionId;
-                } else {
+            $(document).on('click', '.lastSessionIdLink', function(e){
+                $('#sessionId').val(localStorage.getItem(localStorageKey));
+                e.preventDefault();
+            });
+
+            $(document).on('click', '#startLogging', function(e){
+                sessionId = $('#sessionId').val();
+                if (sessionId.length === 0) {
                     alert('Session id cannot be empty');
                 }
+                startLogging();
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.copyCodeLink', function (e) {
+                copyElementTextToClipboard($(this).siblings('pre.codeToCopy'));
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.logItemPinLink:not(.pinned)', function (e) {
+                pinItem($(this));
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.logItemPinLink.pinned', function (e) {
+                unpinItem($(this));
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.logItemHighlightLink', function (e) {
+                $(this)
+                    .closest('.logItemContainer')
+                       .toggleClass('highlightItem')
+                       .find('.logItemCardHeader')
+                           .toggleClass('highlightItem');
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.logItemCollapseLink', function (e) {
+                var $this = $(this);
+                $this.text($this.text() === 'Collapse' ? 'Uncollapse' : 'Collapse');
+                $this
+                    .closest('.logItemContainer')
+                       .find('.logItem, .card-body')
+                           .toggleClass('collapsed')
+                ;
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.logItemRemoveLink', function (e) {
+                $(this).closest('.removableItem').fadeOut(250, function () {
+                    $(this).remove();
+                });
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.getCodeLink', function(e) {
+                $('.codeSnippetsWrapper').removeClass('hide');
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.codeSnippetsCloseLink', function(e) {
+                $('.codeSnippetsWrapper').addClass('hide');
+                e.preventDefault();
+            });
+
+            $(document).on('click', '.freezeLogLink', function(e) {
+                freezeLog($(this));
                 e.preventDefault();
             });
         });
