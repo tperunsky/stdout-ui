@@ -67,22 +67,33 @@ $wssUrl = $host . ':' . $port;
                 <div class="card-body">
                     <h5 class="text-center">What's this?</h5>
                     <p>This website provides a way to send arbitrary text to the browser from any program with zero
-                        setup.</p>
+                        setup.
+                    </p>
+                    <hr/>
+                    <h5 class="text-center">How do I use it?</h5>
+                    <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your
+                        program. The output will show up in your browser.
+                    </p>
                     <hr/>
                     <h5 class="text-center">How does it work</h5>
-                    <p>Click on the "Start logging" button above, copy the code snippet and run it anywhere in your
-                        program. The output will show up in your browser. Your session id will be saved in local
-                        storage.</p>
+                    <p>The code snippet you can copy after you click "Start logging" above sends a request to the
+                        stdout.online TCP server. The TCP server passes it to a WebSocket server which your browser
+                        is connected to. That means you can use stdout.online with any programming language capable of
+                        making TCP connections.
+                    </p>
                     <hr/>
                     <h5 class="text-center">Is it safe?</h5>
                     <p>
                         No. Don't use it for any sensitive data for two reasons:
-                    <ul>
-                        <li>Anyone who guesses your session id can see your log output and you won't know about it.</li>
-                        <li>Any data you send to the stdout.online TCP server may end up in logs and memory dumps.
-                            Having said that, nothing is intentionally stored on the server.
-                        </li>
-                    </ul>
+                        <ul>
+                            <li>
+                                Anyone who guesses your session id can see your log output and you won't know about it.
+                            </li>
+                            <li>
+                                Any data you send to the stdout.online TCP server may end up in logs and memory dumps.
+                                Having said that, nothing is intentionally stored on the server.
+                            </li>
+                        </ul>
                     </p>
                     <hr/>
                     <h5 class="text-center">y tho</h5>
@@ -104,16 +115,16 @@ $wssUrl = $host . ':' . $port;
     <header class="container-fluid">
         <div class="page-header">
             <h4 class="headerFlex">
-                        <span>
-                            stdout.online
-                            <span class="badge badge-success hide connectionSuccess">Connected</span>
-                            <span class="badge badge-warning connectionPending">Connecting...</span>
-                            <span class="badge badge-info sessionIdBadge"></span>
-                        </span>
                 <span>
-                            <a href="#" class="getCodeLink"><small>Get code</small></a>
-                            <a href="#" class="freezeLogLink"><small>Freeze</small></a>
-                        </span>
+                    stdout.online
+                    <span class="badge badge-success hide connectionSuccess">Connected</span>
+                    <span class="badge badge-warning connectionPending">Connecting...</span>
+                    <span class="badge badge-info sessionIdBadge"></span>
+                </span>
+                <span>
+                    <a href="#" class="getCodeLink"><small>Get code</small></a>
+                    <a href="#" class="freezeLogLink"><small>Freeze</small></a>
+                </span>
 
             </h4>
         </div>
@@ -123,7 +134,7 @@ $wssUrl = $host . ':' . $port;
 
     <hr/>
 
-    <div class="container-fluid codeSnippetsWrapper">
+    <div class="codeSnippetsWrapper container-fluid ">
         <div class="card">
             <div class="card-header">
                 <p class="codeSnippetsExplanation">Choose your programming language and use the provided code snippet
@@ -174,7 +185,7 @@ $wssUrl = $host . ':' . $port;
         </div>
     </div>
 
-    <div class="container-fluid logItemContainer removableItem originalItem toClone hide">
+    <div class="logItemContainer container-fluid removableItem originalItem toClone hide">
         <div class="card text-white bg-dark mb-3">
             <div class="logItemCardHeader card-header">
                 <div class="float-left timestampWrapper">
@@ -195,7 +206,7 @@ $wssUrl = $host . ':' . $port;
         </div>
     </div>
 
-    <div class="container-fluid freezeItem removableItem toClone hide">
+    <div class="freezeItem container-fluid removableItem toClone hide">
         <div class="card text-white bg-dark mb-3">
             <div class="logItemCardHeader card-header">
                 <div class="float-left timestampWrapper">
@@ -217,6 +228,7 @@ $wssUrl = $host . ':' . $port;
 
 <input type="hidden" id="serverUnique" value="<?= substr(uniqid('', false), -5) ?>"/>
 <input type="hidden" id="wssUrl" value="wss://<?= $wssUrl ?>"/>
+
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
