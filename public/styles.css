@@ -106,9 +106,18 @@ body.frozen {
     background-color: #06062f;
 }
 
-h4.headerFlex {
+h5.headerFlex {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+}
+
+.marginLeftAuto {
+    margin-left: auto;
+}
+
+.flexbox {
+    display: flex;
 }
 
 .strikeThroughText {
@@ -129,8 +138,9 @@ h4.headerFlex {
     color: whitesmoke;
 }
 
-.codeSnippetsWrapper .codeSnippetsExplanation {
-    display: inline-block;
+.codeSnippetsWrapper .codeSnippetsCloseLink  {
+    margin-left: auto;
+    padding-left: 1rem;
 }
 
 .card.cardDarkNarrow {

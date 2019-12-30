@@ -126,21 +126,20 @@ $wssUrl = $host . ':' . $port;
     </div>
 </div>
 <div class="theLog hide">
-    <header class="container-fluid">
+    <header class="topNavbar container-fluid">
         <div class="page-header">
-            <h4 class="headerFlex">
+            <h5 class="headerFlex">
                 <span>
                     stdout.online
                     <span class="badge badge-success hide connectionSuccess">Connected</span>
                     <span class="badge badge-warning connectionPending">Connecting...</span>
                     <span class="badge badge-info sessionIdBadge"></span>
                 </span>
-                <span>
+                <span class="marginLeftAuto">
                     <a href="#" class="getCodeLink"><small>Get code</small></a>
                     <a href="#" class="freezeLogLink"><small>Freeze</small></a>
                 </span>
-
-            </h4>
+            </h5>
         </div>
     </header>
 
@@ -151,9 +150,11 @@ $wssUrl = $host . ':' . $port;
     <div class="codeSnippetsWrapper container-fluid ">
         <div class="card">
             <div class="card-header">
-                <p class="codeSnippetsExplanation">Choose your programming language and use the provided code snippet
-                    to send log messages to this window.</p>
-                <a href="#" class="codeSnippetsCloseLink float-right">Close</a>
+                <div class="flexbox">
+                    <p class="codeSnippetsExplanation">Choose your programming language and use the provided code snippet
+                        to send log messages to this window.</p>
+                    <a href="#" class="codeSnippetsCloseLink">Close</a>
+                </div>
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-php" role="tab"
