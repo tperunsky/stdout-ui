@@ -161,6 +161,10 @@ $wssUrl = $host . ':' . $port;
                            aria-controls="pills-home" aria-selected="true">PHP</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python" role="tab"
+                           aria-controls="pills-contact" aria-selected="false">Python</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-ruby" role="tab"
                            aria-controls="pills-profile" aria-selected="false">Ruby</a>
                     </li>
@@ -169,8 +173,8 @@ $wssUrl = $host . ':' . $port;
                            aria-controls="pills-contact" aria-selected="false">Java</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python" role="tab"
-                           aria-controls="pills-contact" aria-selected="false">Python</a>
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-other" role="tab"
+                           aria-controls="pills-contact" aria-selected="false">Other</a>
                     </li>
                 </ul>
             </div>
@@ -184,14 +188,17 @@ $wssUrl = $host . ':' . $port;
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
                         <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
+                    <div class="tab-pane fade" id="pills-python" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre>coming soon</pre>
+                    </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <pre>not supported yet</pre>
+                        <pre>coming soon</pre>
                     </div>
                     <div class="tab-pane fade" id="pills-java" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <pre>not supported yet</pre>
+                        <pre>coming soon</pre>
                     </div>
-                    <div class="tab-pane fade" id="pills-python" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <pre>not supported yet</pre>
+                    <div class="tab-pane fade" id="pills-other" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre>coming soon</pre>
                     </div>
                 </div>
             </div>
