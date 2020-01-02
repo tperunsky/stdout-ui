@@ -177,7 +177,7 @@ $wssUrl = $host . ':' . $port;
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-ruby" role="tab"
-                           aria-controls="pills-profile" aria-selected="false">Ruby</a>
+                           aria-controls="pills-profile" aria-selected="false">Ruby 2</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-other" role="tab"
