@@ -92,6 +92,9 @@ $wssUrl = $host . ':' . $port;
                         stdout.online TCP server. The TCP server passes it to a WebSocket server which your browser
                         is connected to. That means you can use stdout.online with any programming language capable of
                         making TCP connections.
+                        The maximum number of logged messages is 1000. After reaching this limit the oldest messages
+                        will be deleted as new messages arrive. If you want to keep a message, you can pin it.
+                        Refreshing the page will clear all messages with no way to recover them.
                     </p>
                     <hr/>
 
@@ -158,11 +161,15 @@ $wssUrl = $host . ':' . $port;
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-php" role="tab"
-                           aria-controls="pills-home" aria-selected="true">PHP</a>
+                           aria-controls="pills-home" aria-selected="true">PHP 7.0+</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python" role="tab"
-                           aria-controls="pills-contact" aria-selected="false">Python</a>
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python2" role="tab"
+                           aria-controls="pills-contact" aria-selected="false">Python 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python3" role="tab"
+                           aria-controls="pills-contact" aria-selected="false">Python 3</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-ruby" role="tab"
@@ -180,16 +187,30 @@ $wssUrl = $host . ':' . $port;
             </div>
             <div class="card-body">
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-php" role="tabpanel"
-                         aria-labelledby="pills-home-tab">
-                            <pre class="codeToCopy">
+                    <div class="tab-pane fade show active" id="pills-php" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <pre class="codeToCopy">
 (function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'{%%sessionId%%}']));fclose($c);})
 ('Your text goes here');</pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
                         <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
-                    <div class="tab-pane fade" id="pills-python" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <pre>coming soon</pre>
+                    <div class="tab-pane fade" id="pills-python2" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre class="codeToCopy">
+def stdout_online(m):
+    import socket;import json;s=socket.socket();s.connect(('stdout.online',10660));s.send(json.dumps({'m':m,'s':'{%%sessionId%%}'}));s.close ()
+stdout_online("Your message goes here")
+                        </pre>
+                        <a href="#" class="copyCodeLink">Copy code snippet</a>
+                        <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
+                    </div>
+                    <div class="tab-pane fade" id="pills-python3" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        <pre class="codeToCopy">
+def stdout_online(m):
+    import socket;import json;s=socket.socket();s.connect(('stdout.online',10660));s.send(bytes(json.dumps({'m':m,'s':'{%%sessionId%%}'}),'UTF-8'));s.close ()
+stdout_online("Your message goes here")
+                        </pre>
+                        <a href="#" class="copyCodeLink">Copy code snippet</a>
+                        <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
                         <pre>coming soon</pre>
