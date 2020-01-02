@@ -161,7 +161,7 @@ $wssUrl = $host . ':' . $port;
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-php" role="tab"
-                           aria-controls="pills-home" aria-selected="true">PHP 7.0+</a>
+                           aria-controls="pills-home" aria-selected="true">PHP 5.4+</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-python2" role="tab"
@@ -189,15 +189,15 @@ $wssUrl = $host . ':' . $port;
                 <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-php" role="tabpanel" aria-labelledby="pills-home-tab">
                         <pre class="codeToCopy">
-(function($m){fwrite($c=stream_socket_client('tcp://stdout.online:10660'),json_encode(['m'=>$m,'s'=>'{%%sessionId%%}']));fclose($c);})
-('Your text goes here');</pre>
+call_user_func(function($m){file_get_contents('https://stdout.online/log/',0,stream_context_create(['http'=>['header'=>['Content-Type:'],'content'=>json_encode(['m'=>$m,'s'=>'{%%sessionId%%}'])]]));},
+'Your message goes here');</pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
                         <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
                     <div class="tab-pane fade" id="pills-python2" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <pre class="codeToCopy">
 def stdout_online(m):
-    import socket;import json;s=socket.socket();s.connect(('stdout.online',10660));s.send(json.dumps({'m':m,'s':'{%%sessionId%%}'}));s.close ()
+    import urllib;import json;urllib.urlopen('https://stdout.online/log/',json.dumps({'m':m,'s':'{%%sessionId%%}'}))
 stdout_online("Your message goes here")
                         </pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
@@ -206,7 +206,7 @@ stdout_online("Your message goes here")
                     <div class="tab-pane fade" id="pills-python3" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <pre class="codeToCopy">
 def stdout_online(m):
-    import socket;import json;s=socket.socket();s.connect(('stdout.online',10660));s.send(bytes(json.dumps({'m':m,'s':'{%%sessionId%%}'}),'UTF-8'));s.close ()
+    import urllib.request;import json;urllib.request.urlopen('https://stdout.online/log/',bytes(json.dumps({'m':m,'s':'{%%sessionId%%}'}),'UTF-8'))
 stdout_online("Your message goes here")
                         </pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
