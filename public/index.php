@@ -89,26 +89,30 @@ $wssUrl = $host . ':' . $port;
 
                     <h5 class="text-center">How does it work</h5>
                     <p>The code snippet you can copy after you click "Start logging" above sends a request to the
-                        stdout.online TCP server. The TCP server passes it to a WebSocket server which your browser
-                        is connected to. That means you can use stdout.online with any programming language capable of
-                        making TCP connections.
+                        https://stdout.online/log endpoint. The web server server passes it to a WebSocket server which
+                        your browser is connected to. That means you can use stdout.online with any programming language
+                        capable of making HTTPS or even just plain TCP* connections.
                         The maximum number of logged messages is 1000. After reaching this limit the oldest messages
                         will be deleted as new messages arrive. If you want to keep a message, you can pin it.
                         Refreshing the page will clear all messages with no way to recover them.
+
+                        *A TCP server is available if you cannot use HTTPS, but keep in mind the connection is not
+                        encrypted. The server is available at tcp://stdout.online:10660.
                     </p>
                     <hr/>
 
                     <h5 class="text-center">Is it safe?</h5>
                     <p>
-                        No. Don't use it for any sensitive data for two reasons:
+                        No. While all the connections are encrypted (unless you use the TCP server), you shouldn't use
+                        it for any sensitive data for two reasons:
                     </p>
                     <ul>
                         <li>
                             Anyone who guesses your session id can see your log output and you won't know about it.
                         </li>
                         <li>
-                            Any data you send to the stdout.online TCP server may end up in logs and memory dumps.
-                            Having said that, nothing is intentionally stored on the server.
+                            Any data you send to the stdout.online HTTPS or TCP server may end up in logs and memory
+                            dumps. Having said that, nothing is intentionally stored on the server.
                         </li>
                     </ul>
                     <hr/>
@@ -176,10 +180,6 @@ $wssUrl = $host . ':' . $port;
                            aria-controls="pills-profile" aria-selected="false">Ruby</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-java" role="tab"
-                           aria-controls="pills-contact" aria-selected="false">Java</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-other" role="tab"
                            aria-controls="pills-contact" aria-selected="false">Other</a>
                     </li>
@@ -198,8 +198,7 @@ call_user_func(function($m){file_get_contents('https://stdout.online/log/',0,str
                         <pre class="codeToCopy">
 def stdout_online(m):
     import urllib;import json;urllib.urlopen('https://stdout.online/log/',json.dumps({'m':m,'s':'{%%sessionId%%}'}))
-stdout_online("Your message goes here")
-                        </pre>
+stdout_online("Your message goes here")</pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
                         <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
@@ -207,16 +206,16 @@ stdout_online("Your message goes here")
                         <pre class="codeToCopy">
 def stdout_online(m):
     import urllib.request;import json;urllib.request.urlopen('https://stdout.online/log/',bytes(json.dumps({'m':m,'s':'{%%sessionId%%}'}),'UTF-8'))
-stdout_online("Your message goes here")
-                        </pre>
+stdout_online("Your message goes here")</pre>
                         <a href="#" class="copyCodeLink">Copy code snippet</a>
                         <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
                     <div class="tab-pane fade" id="pills-ruby" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        <pre>coming soon</pre>
-                    </div>
-                    <div class="tab-pane fade" id="pills-java" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <pre>coming soon</pre>
+                        <pre class="codeToCopy">
+Proc.new{|m|require 'net/http';r=Net::HTTP::Post.new('/log/');r.body={'m'=>m,'s'=>'{%%sessionId%%}'}.to_json;h=Net::HTTP.new('stdout.online',443);h.use_ssl=true;h.request(r)}
+.call('Your message goes here')</pre>
+                        <a href="#" class="copyCodeLink">Copy code snippet</a>
+                        <span class="badge badge-success copyCodeSuccess" style="display:none;">Copied!</span>
                     </div>
                     <div class="tab-pane fade" id="pills-other" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <pre>coming soon</pre>
