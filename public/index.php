@@ -87,7 +87,7 @@ $wssUrl = $host . ':' . $port;
                     </p>
                     <hr/>
 
-                    <h5 class="text-center">How does it work</h5>
+                    <h5 class="text-center">How does it work?</h5>
                     <p>The code snippet you can copy after you click "Start logging" above sends a request to the
                         https://stdout.online/log endpoint. The web server server passes it to a WebSocket server which
                         your browser is connected to. That means you can use stdout.online with any programming language
@@ -95,7 +95,7 @@ $wssUrl = $host . ':' . $port;
                         The maximum number of logged messages is 1000. After reaching this limit the oldest messages
                         will be deleted as new messages arrive. If you want to keep a message, you can pin it.
                         Refreshing the page will clear all messages with no way to recover them.
-
+                        <br/><br/>
                         *A TCP server is available if you cannot use HTTPS, but keep in mind the connection is not
                         encrypted. The server is available at tcp://stdout.online:10660.
                     </p>
@@ -123,9 +123,9 @@ $wssUrl = $host . ':' . $port;
                         debug something but I didn't have a quick way to output stuff - maybe I didn't have ssh access,
                         maybe the script ran in the background and the output was redirected to /dev/null, maybe logging
                         was not injected in the class I was looking at... In each case it probably only took a few
-                        minutes to find a workaround, but those were minutes I would have preferred to spend actually
-                        debugging. Being able to just paste a one-liner literally anywhere in the code to dump any value
-                        I want is exactly what I needed. So I decided to write an app that allows me to do that.
+                        minutes to find a workaround, but that was valuable time I would have preferred to spend actually
+                        debugging. What I needed was to be able to just paste a one-liner literally anywhere in the code
+                        to output any value I wanted. So I decided to write an app that allows me to do just that.
                     </p>
                 </div>
             </div>
